@@ -1,0 +1,43 @@
+﻿@if(visible)
+{
+    <div class="row">
+        <div class="col-md-6"><h3 class="d-inline">Blog details - Basic</h3></div>
+        <div class="col-md-6 text-end"><button class="d-inline btn btn-primary" @onclick="BackToBlogList">Back to blog list</button></div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+
+                <div class="card mt-5">
+                    <div class="image-container">
+                        <img src="@blogDetails.Url" alt="Card Image" class="card-image" />
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title text-center">@blogDetails.Name</h5>
+                        <h3 class="card-title text-center">@blogDetails.Title</h3>
+                        <p class="card-text text-center">Author :- @blogDetails.Author | Date</p>
+                        <p class="card-text">@blogDetails.Description</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+@code {
+
+    [Parameter]
+    public bool visible { get; set; }
+    [Parameter]
+    public Blog blogDetails { get; set; }
+
+    [Parameter]
+    public EventCallback backToList { get; set; }
+
+    private void BackToBlogList()
+    {
+        backToList.InvokeAsync();
+    }
+}

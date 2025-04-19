@@ -1,0 +1,144 @@
+﻿<AddButton visible="@showAddButton"
+CreateBlogClick="CreateBlog" />
+
+<BlogCard Blogs="blogs"
+visible="showcard"
+EditBlogClick="EditBlog"
+ViewBlogClick="ViewBlog"
+DeleteBlogClick="DeleteConfirmation" />
+
+<CreateUpdateBlog visible="@showCreateUpdateBlogForm"
+saveClick="SaveBlog"
+cancelClick="CancelBlog"
+Model="@createUpdateBlog"
+Title="@Title" />
+
+<Confirmation DeleteYesClick="DeleteBlog" CancelNoClick="CancelDelete" visible="@showConfirmation" />
+
+<BlogDetails backToList="CancelBlog" blogDetails="@blogForDetail" visible="@showBlogDetails" />
+
+@code {
+
+    private List<BlogViewModel> blogs = new List<BlogViewModel>();
+    private BlogViewModel createUpdateBlog;
+    private Blog blogForDetail;
+    private bool showcard;
+    private bool showAddButton;
+    private bool showCreateUpdateBlogForm;
+    private bool showConfirmation;
+    private bool showBlogDetails;
+    private int deleteBlogId;
+    private string Title;
+    [Inject]
+    private IBlogService blogService { get; set; }
+
+    protected override void OnInitialized()
+    {
+        ResetAllFields();
+        showcard = true;
+        showAddButton = true;
+        LoadBlogs();
+    }
+
+    private async void LoadBlogs()
+    {
+        var bloglist = await blogService.GetAllBlogs();
+        blogs = bloglist.Select(x => new BlogViewModel() 
+            {   
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                ImageUrl = x.Url 
+            }
+        ).ToList();
+    }
+
+    private void CreateBlog()
+    {
+        ResetAllFields();
+        showCreateUpdateBlogForm = true;
+        Title = "Create";
+        createUpdateBlog = new();
+    }
+    private async void EditBlog(int id)
+    {
+        var blog = await blogService.GetByIdAsync(id);
+        ResetAllFields();
+        showCreateUpdateBlogForm = true;
+        Title = "Update";
+        createUpdateBlog = new BlogViewModel
+            {
+                Id = blog.Id,
+                Name = blog.Name,
+                Description = blog.Description,
+                ImageUrl = blog.Url
+            };
+    }
+    private async void ViewBlog(int id)
+    {
+        var blog = await blogService.GetByIdAsync(id);
+        ResetAllFields();
+        blogForDetail = blog;
+        showBlogDetails = true;
+    }
+    private async void SaveBlog()
+    {
+        if(createUpdateBlog.Id > 0)
+        {
+            var blogtoupdate = new Blog
+                {
+                    Id = createUpdateBlog.Id,
+                    Name = createUpdateBlog.Name,
+                    Description = createUpdateBlog.Description,
+                    Url = createUpdateBlog.ImageUrl
+                };
+            await blogService.UpdateAsync(createUpdateBlog.Id, blogtoupdate);
+        }
+        else
+        {
+            var blog = new Blog { Id = createUpdateBlog.Id, Name = createUpdateBlog.Name, Description = createUpdateBlog.Description, Url = createUpdateBlog.ImageUrl };
+            await blogService.CreateAsync(blog);
+        }
+        ResetAllFields();
+        LoadBlogs();
+        showcard = true;
+        showAddButton = true;
+    }
+    private async void DeleteBlog()
+    {
+        await blogService.DeleteAsync(deleteBlogId);
+        ResetAllFields();
+        LoadBlogs();
+        showcard = true;
+    }
+    private void CancelDelete()
+    {
+        ResetAllFields();
+        LoadBlogs();
+        showcard = true;
+    }
+    private void CancelBlog()
+    {
+        ResetAllFields();
+        LoadBlogs();
+        showAddButton = true;
+        showcard = true;
+    }
+    private void ResetAllFields()
+    {
+        showcard = false;
+        showAddButton = false;
+        showCreateUpdateBlogForm = false;
+        showConfirmation = false;
+        showBlogDetails = false;
+        deleteBlogId = 0;
+        createUpdateBlog = null!;
+        blogForDetail = new Blog();
+        Title = "";
+    }
+    private void DeleteConfirmation(int blogid)
+    {
+        deleteBlogId = blogid;
+        showConfirmation = true;
+    }
+}

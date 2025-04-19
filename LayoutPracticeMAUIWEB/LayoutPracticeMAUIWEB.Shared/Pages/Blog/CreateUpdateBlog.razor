@@ -1,0 +1,54 @@
+﻿
+@if(visible)
+{
+<h3>@Title Blog</h3>
+
+    <EditForm Model="Model" OnValidSubmit="CreateUPdateBlog">
+    <DataAnnotationsValidator/>
+    <div class="form-group">
+        <label for="name">Name</label>
+            <InputText id="name" @bind-Value="Model.Name" class="form-control" />
+            <ValidationMessage For="@(()=>Model.Name)" />
+    </div>
+    <div class="form-group">
+        <label for="Description">Description</label>
+            <InputText id="Description" @bind-Value="Model.Description" class="form-control" />
+            <ValidationMessage For="@(()=>Model.Description)" />
+    </div>
+    <div class="form-group">
+        <label for="ImageUrl">Image Url</label>
+            <InputText id="ImageUrl" @bind-Value="Model.ImageUrl" class="form-control" />
+            <ValidationMessage For="@(()=>Model.ImageUrl)" />
+    </div>
+
+        <button type="submit" class="@((Title == "Create") ? "btn btn-primary m-md-1" : "btn btn-success m-md-1")">@Title</button>
+    <button class="btn btn-primary m-md-1" @onclick="CancelBlog">Back to Blog list</button> 
+
+</EditForm>
+
+}
+@code {
+
+    [Parameter]
+    public bool visible { get; set; }
+
+    [Parameter]
+    public string Title { get; set; }
+
+    [Parameter]
+    public BlogViewModel Model { get; set; }
+    [Parameter]
+    public EventCallback saveClick { get; set; }
+    [Parameter]
+    public EventCallback cancelClick { get; set; }
+
+    private async Task CreateUPdateBlog()
+    {
+        await saveClick.InvokeAsync(Model);
+    }
+
+    private async Task CancelBlog()
+    {
+        await cancelClick.InvokeAsync(Model);
+    }
+}

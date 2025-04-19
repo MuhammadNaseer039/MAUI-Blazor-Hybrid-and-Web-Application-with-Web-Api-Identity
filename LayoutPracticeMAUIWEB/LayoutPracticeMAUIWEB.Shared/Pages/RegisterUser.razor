@@ -1,0 +1,46 @@
+﻿@page "/register"
+
+
+@inject AuthServices authServices
+
+@inject NavigationManager NavigationManager
+<h3>RegisterUser</h3>
+
+<EditForm Model="@RegisterModel" OnValidSubmit="HandleRegister">
+    <InputText @bind-Value="RegisterModel.UserName" placeholder="Username" />
+    <InputText @bind-Value="RegisterModel.Email" placeholder="Email" />
+    <InputText @bind-Value="RegisterModel.Password" type="password" placeholder="Password" />
+    <label>Role</label>
+    <InputSelect @bind-Value="userrole">
+        <option>-----select-----</option>
+        <option value="HR">HR</option>
+        <option value="Admin">Admin</option>
+    </InputSelect>
+    <button type="submit">Register</button>
+</EditForm>
+
+@if (Message != null)
+{
+    <div class="alert @(IsError ? "alert-danger" : "alert-success")">
+        @Message
+    </div>
+}
+
+@code {
+    private RegisterDTO RegisterModel = new();
+    private string userrole;
+    private string Message;
+    private bool IsError;
+
+    private async Task HandleRegister()
+    {
+        var result = await authServices.RegisterAsync(RegisterModel, userrole);
+        Message = result.Message;
+        IsError = result.Status == "Error";
+
+        if (!IsError)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+}

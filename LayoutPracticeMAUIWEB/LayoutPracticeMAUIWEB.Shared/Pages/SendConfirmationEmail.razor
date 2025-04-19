@@ -1,0 +1,16 @@
+﻿@page "/ConfirmEmail/{visible:bool}"
+
+@if(visible)
+{
+    <h1>You have successfully Confirm your Email now you can login</h1>
+}
+else
+{
+    <h1>You have not successfully Confirm your Email.</h1>
+}
+
+@code {
+    [Parameter]
+    public bool visible { get; set; }
+
+}
