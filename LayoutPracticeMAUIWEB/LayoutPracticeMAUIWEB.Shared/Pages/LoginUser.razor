@@ -1,0 +1,34 @@
+﻿@page "/Login"
+
+@layout null;
+
+@inject IAuthService AuthService
+
+@inject NavigationManager NavigationManager
+<h3>LoginUser</h3>
+
+<EditForm Model="@user" OnValidSubmit="HandleLogin">
+    <label>Email</label>
+    <InputText @bind-Value="user.Email" placeholder="Enter your Email" />
+    <label>Password</label>
+    <InputText @bind-Value="user.Password" placeholder="Enter your Password" />
+    <button type="submit" class="btn btn-primary">Login</button>
+</EditForm>
+
+@code {
+    public LoginDTO user = new();
+    private async Task HandleLogin()
+    {
+        var response = await AuthService.LoginAsync(user);
+
+        if(response.Status == "Success")
+        {
+            NavigationManager.NavigateTo("/",true);
+        }
+        else
+        {
+            Console.WriteLine("Error while Login");
+        }
+    }
+
+}

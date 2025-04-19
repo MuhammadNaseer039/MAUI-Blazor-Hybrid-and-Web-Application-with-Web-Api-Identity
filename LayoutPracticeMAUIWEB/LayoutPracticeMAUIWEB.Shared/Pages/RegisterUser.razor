@@ -1,7 +1,6 @@
 ﻿@page "/register"
 
-
-@inject AuthServices authServices
+@inject IAuthService AuthService
 
 @inject NavigationManager NavigationManager
 <h3>RegisterUser</h3>
@@ -34,7 +33,7 @@
 
     private async Task HandleRegister()
     {
-        var result = await authServices.RegisterAsync(RegisterModel, userrole);
+        var result = await AuthService.RegisterAsync(RegisterModel, userrole);
         Message = result.Message;
         IsError = result.Status == "Error";
 

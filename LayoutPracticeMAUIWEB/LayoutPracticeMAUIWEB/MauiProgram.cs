@@ -21,7 +21,8 @@ namespace LayoutPracticeMAUIWEB
             builder.Services.AddHttpClient();
             builder.Services.AddSingleton<IFormFactor, FormFactor>();
             builder.Services.AddSingleton<IBlogService,BlogService>();
-            builder.Services.AddHttpClient<AuthServices>(client =>
+            builder.Services.AddScoped<ITokenStorageService, HybridTokenStorageService>();
+            builder.Services.AddHttpClient<IAuthService,AuthService>(client =>
             {
                 client.BaseAddress = new Uri("https://localhost:7202/api/");
             });

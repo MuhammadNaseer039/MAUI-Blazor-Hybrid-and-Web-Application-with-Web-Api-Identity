@@ -17,7 +17,8 @@ namespace LayoutPracticeMAUIWEB
             // Add device-specific services used by the LayoutPracticeMAUIWEB.Shared project
             builder.Services.AddSingleton<IFormFactor, FormFactor>();
             builder.Services.AddSingleton<IBlogService,BlogService>();
-            builder.Services.AddHttpClient<AuthServices>(options =>
+            builder.Services.AddScoped<ITokenStorageService , TokenStorageService>();
+            builder.Services.AddHttpClient<IAuthService,AuthService>(options =>
             {
                 options.BaseAddress = new Uri("https://localhost:7202/api/");
             });
