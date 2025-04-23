@@ -1,0 +1,18 @@
+﻿@inject NavigationManager Navigation
+
+@code {
+    private bool _hasNavigated;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && !_hasNavigated)
+        {
+            _hasNavigated = true;
+
+            // Avoid calling too soon
+            await Task.Yield(); // Ensures it's post-render
+
+            Navigation.NavigateTo("/login", forceLoad: true); // ✅ Safe here
+        }
+    }
+}

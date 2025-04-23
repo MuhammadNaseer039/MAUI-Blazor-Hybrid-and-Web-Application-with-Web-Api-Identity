@@ -20,18 +20,19 @@ namespace LayoutPracticeMAUIWEB.Shared.Services
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var token = await tokenStorage.GetTokenAsync();
+            
 
             //var tokenexpiry = await tokenStorage.GetTokenExpiryAsync();
 
-            if (token == null)
-            {
-                return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
-            }
+            
 
             try
             {
-
+                var token = await tokenStorage.GetTokenAsync();
+                if (token == null)
+                {
+                    return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
+                }
                 var tokenhandler = new JwtSecurityTokenHandler();
 
                 var Jwttoken = tokenhandler.ReadJwtToken(token);
