@@ -1,8 +1,7 @@
 ﻿@using LayoutPracticeMAUIWEB.Shared.Helper
 @inherits LayoutComponentBase
 
-@inject ITokenStorageService tokenStorageService;
-@inject NavigationManager navigationManager;
+
 
 <div class="page">
     <div class="sidebar">
@@ -26,24 +25,3 @@
     <span class="dismiss">🗙</span>
 </div>
 
-@code {
-    private bool _hasRunCheck = false;
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        // Ensure check runs only once and we're not already on /login
-        if (!_hasRunCheck && firstRender && !navigationManager.Uri.Contains("/login"))
-        {
-            _hasRunCheck = true;
-
-            var token = await tokenStorageService.GetTokenAsync();
-            var expiry = tokenStorageService.GetTokenExpiryAsync().ToString();
-
-            if (string.IsNullOrWhiteSpace(token) || TokenHelper.isTokenExpired(expiry))
-            {
-                await tokenStorageService.RemoveTokenAsync();
-                navigationManager.NavigateTo("/login", forceLoad: true);
-            }
-        }
-    }
-}

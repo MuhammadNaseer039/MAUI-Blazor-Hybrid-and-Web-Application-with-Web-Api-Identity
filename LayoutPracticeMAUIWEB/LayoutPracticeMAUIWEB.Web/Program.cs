@@ -1,6 +1,7 @@
 using LayoutPracticeMAUIWEB.Shared.Services;
 using LayoutPracticeMAUIWEB.Web.Components;
 using LayoutPracticeMAUIWEB.Web.Services;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace LayoutPracticeMAUIWEB
 {
@@ -18,6 +19,8 @@ namespace LayoutPracticeMAUIWEB
             builder.Services.AddSingleton<IFormFactor, FormFactor>();
             builder.Services.AddSingleton<IBlogService,BlogService>();
             builder.Services.AddScoped<ITokenStorageService , TokenStorageService>();
+            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+            builder.Services.AddAuthorizationCore();
             builder.Services.AddHttpClient<IAuthService,AuthService>(options =>
             {
                 options.BaseAddress = new Uri("https://localhost:7202/api/");
