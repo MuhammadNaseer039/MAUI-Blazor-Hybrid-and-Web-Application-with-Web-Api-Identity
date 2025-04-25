@@ -1,6 +1,7 @@
 ﻿@using LayoutPracticeMAUIWEB.Shared.Helper
 @inherits LayoutComponentBase
 
+@inject IAuthService auth
 
 
 <div class="page">
@@ -12,6 +13,7 @@
         <div class="top-row px-4">
             <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
         </div>
+        <button class="btn btn-primary" @onclick="HandleLogout">Logout</button>
 
         <article class="content px-4">
             @Body
@@ -25,3 +27,10 @@
     <span class="dismiss">🗙</span>
 </div>
 
+@code
+{
+    private void HandleLogout()
+    {
+        auth.LogoutAsync();
+    }
+}

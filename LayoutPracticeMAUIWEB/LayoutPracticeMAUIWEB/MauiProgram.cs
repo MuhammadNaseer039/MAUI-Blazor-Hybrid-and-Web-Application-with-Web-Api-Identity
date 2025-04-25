@@ -23,7 +23,8 @@ namespace LayoutPracticeMAUIWEB
             builder.Services.AddSingleton<IFormFactor, FormFactor>();
             builder.Services.AddSingleton<IBlogService,BlogService>();
             builder.Services.AddScoped<ITokenStorageService, HybridTokenStorageService>();
-            builder.Services.AddScoped<AuthenticationStateProvider,CustomAuthStateProvider>();
+            builder.Services.AddScoped<CustomAuthStateProvider>();
+            builder.Services.AddScoped<AuthenticationStateProvider>(sp => sp.GetRequiredService<CustomAuthStateProvider>());
             builder.Services.AddAuthorizationCore();
             builder.Services.AddHttpClient<IAuthService,AuthService>(client =>
             {

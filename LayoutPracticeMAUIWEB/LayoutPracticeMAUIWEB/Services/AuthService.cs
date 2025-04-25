@@ -1,5 +1,6 @@
 ﻿using LayoutPracticeMAUIWEB.Shared.Models;
 using LayoutPracticeMAUIWEB.Shared.Services;
+using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 
 namespace LayoutPracticeMAUIWEB.Services
@@ -8,11 +9,15 @@ namespace LayoutPracticeMAUIWEB.Services
     {
         private readonly HttpClient http;
         private readonly ITokenStorageService tokenStorage;
-        public AuthService(HttpClient http, ITokenStorageService tokenStorage)
+        private readonly CustomAuthStateProvider customauth;
+        private readonly NavigationManager navigationManager;
+        public AuthService(HttpClient http, ITokenStorageService tokenStorage, CustomAuthStateProvider customauth, NavigationManager navigationManager)
         {
             this.http = http;
             http.BaseAddress = new Uri("https://localhost:7202/api/");
             this.tokenStorage = tokenStorage;
+            this.customauth = customauth;
+            this.navigationManager = navigationManager;
         }
         public async Task<LoginApiResponsecs> LoginAsync(LoginDTO user)
         {
@@ -78,6 +83,14 @@ namespace LayoutPracticeMAUIWEB.Services
             {
                 return new ApiResponse { Status = "Error", Message = "Network Error" + ex.Message };
             }
+        }
+
+        public async Task LogoutAsync()
+        {
+            await tokenStorage.RemoveTokenAsync();
+
+            customauth.NotifyUserLogout();
+            navigationManager.NavigateTo("/login", true);
         }
     }
 }

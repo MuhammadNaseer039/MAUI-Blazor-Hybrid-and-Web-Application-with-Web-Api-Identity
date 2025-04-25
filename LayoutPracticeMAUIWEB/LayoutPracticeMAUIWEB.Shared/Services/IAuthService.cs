@@ -11,5 +11,7 @@ namespace LayoutPracticeMAUIWEB.Shared.Services
     {
         Task<LoginApiResponsecs> LoginAsync(LoginDTO user);
         Task<ApiResponse> RegisterAsync(RegisterDTO user, string role);
+
+        Task LogoutAsync();
     }
 }
